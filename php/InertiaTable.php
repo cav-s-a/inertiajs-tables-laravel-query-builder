@@ -129,20 +129,30 @@ class InertiaTable
         }
 
         return $this->filters->map(function ($filter, $key) use ($filters) {
-            if (!array_key_exists($key, $filters)) {
-                return $filter;
-            }
+					if (!array_key_exists($key, $filters)) {
+						return $filter;
+					}
 
-            $value = $filters[$key];
+					$value = $filters[$key];
 
-            if (!array_key_exists($value, $filter['options'] ?? [])) {
-                return $filter;
-            }
+					// Selección multiple
+					if (is_array($value)){
+						foreach ($value as $val){
+							if (!array_key_exists($val, $filter['options'] ?? [])) {
+								return $filter;
+							}
+						}
+					}
+					else{
+						if (!array_key_exists($value, $filter['options'] ?? [])) {
+							return $filter;
+						}
+					}
 
-            $filter['value'] = $value;
+					$filter['value'] = $value;
 
-            return $filter;
-        });
+					return $filter;
+				});
     }
 
     /**
